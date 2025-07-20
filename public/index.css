@@ -234,4 +234,15 @@ body {
     .disclosure-container {
         max-width: 100%;
     }
+    .ct-label {
+        font-size: 10px !important;
+    }
+    #expense-chart .ct-label.ct-horizontal {
+        transform: rotate(-45deg);
+        text-anchor: end;
+    }
+    #expense-chart2 .ct-label.ct-horizontal {
+        transform: rotate(-45deg);
+        text-anchor: end;
+    }
 }

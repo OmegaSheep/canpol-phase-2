@@ -69,7 +69,7 @@ block main
         const labels = expenseTypes.map(e => e._id);
         const series = expenseTypes.map(e => ({
           value: e.total,
-          meta: e._id // meta is used by the tooltip plugin
+          meta: e._id
         }));
 
         new Chartist.Bar('#expense-chart', {
@@ -89,7 +89,8 @@ block main
           distributeSeries: true,
           chartPadding: {
             right: 40,
-            left: 20
+            left: 20,
+            bottom: 40,
           },
           plugins: []
         });
@@ -114,7 +115,7 @@ block main
         const labels = expenseSuppliers.map(e => e._id);
         const series = expenseSuppliers.map(e => ({
           value: e.totalSpent,
-          meta: e._id // meta is used by the tooltip plugin
+          meta: e._id
         }));
 
         new Chartist.Bar('#expense-chart2', {
@@ -134,7 +135,8 @@ block main
           distributeSeries: true,
           chartPadding: {
             right: 40,
-            left: 20
+            left: 20,
+            bottom: 40,
           },
           plugins: []
         });
@@ -151,18 +153,16 @@ block main
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
-        //- let expenseAverage = !{JSON.stringify(expenseAverage)}
-        //- let overallAverage = !{JSON.stringify(overallAverage)}
 
-        const labels = [`This MP`, 'Average MP Spending'];
+        const labels = [`${!{JSON.stringify(name)}}`, 'Average MP Spending'];
         const series = [
           {
             value: !{JSON.stringify(expenseAverage)},
-            meta: 'This MP' // meta is used by the tooltip plugin
+            meta: 'This MP'
           },
           {
             value: !{JSON.stringify(overallAverage)},
-            meta: 'Average MP Spending' // meta is used by the tooltip plugin
+            meta: 'Average MP Spending'
           }
         ];
 
@@ -183,7 +183,8 @@ block main
           distributeSeries: true,
           chartPadding: {
             right: 40,
-            left: 20
+            left: 20,
+            bottom: 40,
           },
           plugins: []
         });
