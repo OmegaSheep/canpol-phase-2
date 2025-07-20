@@ -205,6 +205,13 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         { $sort: { totalSpent: -1 } }
     ]).toArray();
 
+    // Top 5 single largest expenses for this MP
+    let topExpenses = await EXPENSES.aggregate([
+        { $match: { name: mp.name.toUpperCase() } },
+        { $sort: { total: -1 } },
+        { $limit: 5 }
+    ]).toArray();
+
     // Average and standard deviation of total expenses for all MPs
     let overallAverage = await EXPENSES.aggregate([
         { $group: { _id: "$name", totalSpent: { $sum: "$total" } } },
@@ -240,6 +247,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         groupedDisclosures: groupDisclosures(disclosures),
         expenseTypes,
         expenseSuppliers,
+        topExpenses,
         expenseAverage: expenseAverage[0].totalSpent,
         overallAverage: overallAverage[0].average,
         percentile,

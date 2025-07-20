@@ -245,4 +245,9 @@ body {
         transform: rotate(-45deg);
         text-anchor: end;
     }
+    #expense-chart3 .ct-label.ct-horizontal {
+        transform: rotate(-45deg);
+        text-anchor: end;
+        font-size: 6px !important;
+    }
 }

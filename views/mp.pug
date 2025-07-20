@@ -88,7 +88,7 @@ block main
           },
           distributeSeries: true,
           chartPadding: {
-            right: 40,
+            right: 10,
             left: 20,
             bottom: 40,
           },
@@ -101,9 +101,6 @@ block main
       .expense-container
         h2 Top 5 Contract Suppliers by Total Spending (April 1, 2024 - March 31, 2025)
         #expense-chart2(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
-
-        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
@@ -134,7 +131,7 @@ block main
           },
           distributeSeries: true,
           chartPadding: {
-            right: 40,
+            right: 10,
             left: 20,
             bottom: 40,
           },
@@ -144,27 +141,15 @@ block main
 
     .centered 
       .expense-container
-        h2 #{name} VS Average MP Spending (April 1, 2024 - March 31, 2025)
-        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP spending.
+        h2 Top 5 Largest Single Expenses (April 1, 2024 - March 31, 2025)
         #expense-chart3(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
-
-        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
+        let topExpenses = !{JSON.stringify(topExpenses)};
 
-        const labels = [`${!{JSON.stringify(name)}}`, 'Average MP Spending'];
-        const series = [
-          {
-            value: !{JSON.stringify(expenseAverage)},
-            meta: 'This MP'
-          },
-          {
-            value: !{JSON.stringify(overallAverage)},
-            meta: 'Average MP Spending'
-          }
-        ];
+        const labels = topExpenses.map(e => `${e.description} (${e.supplier})`);
+        const series = topExpenses.map(e => e.total);
 
         new Chartist.Bar('#expense-chart3', {
           labels: labels,
@@ -182,8 +167,54 @@ block main
           },
           distributeSeries: true,
           chartPadding: {
-            right: 40,
+            right: 10,
             left: 20,
+            bottom: 40,
+          },
+          plugins: []
+        });
+      });
+
+    .centered 
+      .expense-container
+        h2 #{name} VS Average MP Spending (April 1, 2024 - March 31, 2025)
+        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP spending.
+        #expense-chart4(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
+
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+
+        const labels = [`${!{JSON.stringify(name)}}`, 'Average MP Spending'];
+        const series = [
+          {
+            value: !{JSON.stringify(expenseAverage)},
+            meta: 'This MP'
+          },
+          {
+            value: !{JSON.stringify(overallAverage)},
+            meta: 'Average MP Spending'
+          }
+        ];
+
+        new Chartist.Bar('#expense-chart4', {
+          labels: labels,
+          series: series
+        }, {
+          axisY: {
+            labelInterpolationFnc: function(value) {
+              return '$' + value.toLocaleString();
+            }
+          },
+          axisX: {
+            labelInterpolationFnc: function(value) {
+              return value;
+            }
+          },
+          distributeSeries: true,
+          chartPadding: {
+            right: 10,
+            left: 30,
             bottom: 40,
           },
           plugins: []
