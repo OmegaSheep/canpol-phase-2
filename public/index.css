@@ -87,6 +87,11 @@ a.invis{
     max-width: 60%;
 }
 
+.expense-container {
+    max-width: 100%;
+    width: 1000px;
+}
+
 .mp-container-thin {
     background-color: #fff;
     display: flex;

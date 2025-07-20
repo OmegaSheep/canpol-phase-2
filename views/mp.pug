@@ -51,3 +51,140 @@ block main
               each content in contents
                 each line in content.split("\n")
                   p=line
+    .centered 
+      .expense-container
+        h2 Top 5 Expense Spends (April 1, 2024 - March 31, 2025)
+        #expense-chart(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
+
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        let expenseTypes = !{JSON.stringify(expenseTypes)};
+        expenseTypes = expenseTypes
+          .sort((a, b) => b.total - a.total)
+          .slice(0, 5);
+
+        const labels = expenseTypes.map(e => e._id);
+        const series = expenseTypes.map(e => ({
+          value: e.total,
+          meta: e._id // meta is used by the tooltip plugin
+        }));
+
+        new Chartist.Bar('#expense-chart', {
+          labels: labels,
+          series: series
+        }, {
+          axisY: {
+            labelInterpolationFnc: function(value) {
+              return '$' + value.toLocaleString();
+            }
+          },
+          axisX: {
+            labelInterpolationFnc: function(value) {
+              return value;
+            }
+          },
+          distributeSeries: true,
+          chartPadding: {
+            right: 40,
+            left: 20
+          },
+          plugins: []
+        });
+      });
+
+  
+    .centered 
+      .expense-container
+        h2 Top 5 Contract Suppliers by Total Spending (April 1, 2024 - March 31, 2025)
+        #expense-chart2(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
+
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        let expenseSuppliers = !{JSON.stringify(expenseSuppliers)};
+        expenseSuppliers = expenseSuppliers
+          .sort((a, b) => b.totalSpent - a.totalSpent)
+          .slice(0, 5);
+
+        const labels = expenseSuppliers.map(e => e._id);
+        const series = expenseSuppliers.map(e => ({
+          value: e.totalSpent,
+          meta: e._id // meta is used by the tooltip plugin
+        }));
+
+        new Chartist.Bar('#expense-chart2', {
+          labels: labels,
+          series: series
+        }, {
+          axisY: {
+            labelInterpolationFnc: function(value) {
+              return '$' + value.toLocaleString();
+            }
+          },
+          axisX: {
+            labelInterpolationFnc: function(value) {
+              return value;
+            }
+          },
+          distributeSeries: true,
+          chartPadding: {
+            right: 40,
+            left: 20
+          },
+          plugins: []
+        });
+      });
+
+    .centered 
+      .expense-container
+        h2 #{name} VS Average MP Spending (April 1, 2024 - March 31, 2025)
+        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP spending.
+        #expense-chart3(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
+
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        //- let expenseAverage = !{JSON.stringify(expenseAverage)}
+        //- let overallAverage = !{JSON.stringify(overallAverage)}
+
+        const labels = [`This MP`, 'Average MP Spending'];
+        const series = [
+          {
+            value: !{JSON.stringify(expenseAverage)},
+            meta: 'This MP' // meta is used by the tooltip plugin
+          },
+          {
+            value: !{JSON.stringify(overallAverage)},
+            meta: 'Average MP Spending' // meta is used by the tooltip plugin
+          }
+        ];
+
+        new Chartist.Bar('#expense-chart3', {
+          labels: labels,
+          series: series
+        }, {
+          axisY: {
+            labelInterpolationFnc: function(value) {
+              return '$' + value.toLocaleString();
+            }
+          },
+          axisX: {
+            labelInterpolationFnc: function(value) {
+              return value;
+            }
+          },
+          distributeSeries: true,
+          chartPadding: {
+            right: 40,
+            left: 20
+          },
+          plugins: []
+        });
+      });
