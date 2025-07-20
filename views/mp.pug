@@ -53,7 +53,7 @@ block main
                   p=line
     .centered 
       .expense-container
-        h2 Top 5 Expense Spends (April 1, 2024 - March 31, 2025)
+        h2 Top 5 Contract Expense Spends (April 1, 2024 - March 31, 2025)
         #expense-chart(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
 
         link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
@@ -141,7 +141,7 @@ block main
 
     .centered 
       .expense-container
-        h2 Top 5 Largest Single Expenses (April 1, 2024 - March 31, 2025)
+        h2 Top 5 Single Largest Contract Expenses (April 1, 2024 - March 31, 2025)
         #expense-chart3(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
 
     script.
@@ -177,8 +177,8 @@ block main
 
     .centered 
       .expense-container
-        h2 #{name} VS Average MP Spending (April 1, 2024 - March 31, 2025)
-        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP spending.
+        h2 #{name} VS Average MP Contract Spending (April 1, 2024 - March 31, 2025)
+        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP Contract Spending.
         #expense-chart4(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
 
 
