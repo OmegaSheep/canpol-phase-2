@@ -51,28 +51,45 @@ block main
               each content in contents
                 each line in content.split("\n")
                   p=line
+    
+
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
     .centered 
       .expense-container
-        h2 Top 5 Contract Expense Spends (April 1, 2024 - March 31, 2025)
-        #expense-chart(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
-
-        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js")
+        h2.chart-title #{name} VS Average MP Contract Spending
+        h3.chart-subtitle (April 1, 2024 - March 31, 2025)
+        - let spendingCategory = '';
+        - if (percentile <= 0.25) {
+        -   spendingCategory = 'in the bottom 25% of MP Contract Spending';
+        - } else if (percentile < 0.5) {
+        -   spendingCategory = 'in the bottom 50% of MP Contract Spending';
+        - } else if (percentile < 0.75) {
+        -   spendingCategory = 'in the upper 50% of MP Contract Spending';
+        - } else if (percentile < 0.9) {
+        -   spendingCategory = 'in the upper 75% of MP Contract Spending';
+        - } else {
+        -   spendingCategory = 'in the upper 90% of MP Contract Spending';
+        - }
+        h3.chart-subtitle #{name} is #{spendingCategory}.
+        #expense-chart4(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
-        let expenseTypes = !{JSON.stringify(expenseTypes)};
-        expenseTypes = expenseTypes
-          .sort((a, b) => b.total - a.total)
-          .slice(0, 5);
 
-        const labels = expenseTypes.map(e => e._id);
-        const series = expenseTypes.map(e => ({
-          value: e.total,
-          meta: e._id
-        }));
+        const labels = [`${!{JSON.stringify(name)}}`, 'Average MP Spending'];
+        const series = [
+          {
+            value: !{JSON.stringify(expenseAverage)},
+            meta: 'This MP'
+          },
+          {
+            value: !{JSON.stringify(overallAverage)},
+            meta: 'Average MP Spending'
+          }
+        ];
 
-        new Chartist.Bar('#expense-chart', {
+        new Chartist.Bar('#expense-chart4', {
           labels: labels,
           series: series
         }, {
@@ -89,17 +106,73 @@ block main
           distributeSeries: true,
           chartPadding: {
             right: 10,
-            left: 20,
+            left: 30,
             bottom: 40,
           },
           plugins: []
         });
       });
 
-  
     .centered 
       .expense-container
-        h2 Top 5 Contract Suppliers by Total Spending (April 1, 2024 - March 31, 2025)
+        h2.chart-title Top 5 Contract Expense Categories by Total Spend
+        h3.chart-subtitle (April 1, 2024 - March 31, 2025)
+        #expense-chart(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        let expenseTypes = !{JSON.stringify(expenseTypes)};
+        const total = expenseTypes.reduce((sum, e) => sum + e.total, 0);
+        let top5 = expenseTypes
+          .sort((a, b) => b.total - a.total)
+          .slice(0, 5);
+        const others = expenseTypes.slice(5);
+        const otherTotal = others.reduce((sum, e) => sum + e.total, 0);
+        if (otherTotal > 0) {
+          top5.push({
+            _id: 'Other',
+            total: otherTotal
+          });
+        }
+        expenseTypes = top5;
+
+        const labels = expenseTypes.map(e => e._id);
+        const series = expenseTypes.map(e => ({
+          value: e.total,
+          meta: e._id
+        }));
+
+        new Chartist.Pie('#expense-chart', {
+          labels: labels,
+          series: series,
+        }, {
+          chartPadding: 20,
+          donut: true,
+          donutWidth: 40,
+          labelInterpolationFnc: function(value, index) {
+            const amount = series[index]['value'];
+            const percentage = ((amount / total) * 100).toFixed(1);
+            
+            return `$${amount.toLocaleString()} (${percentage}%)`;
+          },
+          plugins: [
+          ]
+        });
+      });
+
+    #chart-legend
+      - let i = 0;
+      each expense in expenseTypes
+        - if (++i <= 5)
+          div
+            strong #{i}. #{pieLegend[i-1]} #{expense._id}
+            | : $#{expense.total.toLocaleString()}
+      span 🟢 <strong>All Other Expenses</strong>: $#{(expenseAverage - expenseTypes.slice(0, 5).reduce((sum, e) => sum + e.total, 0)).toLocaleString()}
+
+    .centered
+      .expense-container
+        h2.chart-title Top 5 Sources Paid by Total Spending
+        h3.chart-subtitle (April 1, 2024 - March 31, 2025)
         #expense-chart2(style="height: 400px; width: 100%; max-width: 900px; margin: auto;")
 
     script.
@@ -141,81 +214,38 @@ block main
 
     .centered 
       .expense-container
-        h2 Top 5 Single Largest Contract Expenses (April 1, 2024 - March 31, 2025)
+        h2.chart-title Top 5 Largest Individual Line Items
+        h3.chart-subtitle (April 1, 2024 - March 31, 2025)
         #expense-chart3(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
         let topExpenses = !{JSON.stringify(topExpenses)};
 
-        const labels = topExpenses.map(e => `${e.description} (${e.supplier})`);
-        const series = topExpenses.map(e => e.total);
+        const labels = topExpenses.map(e => `${e.description} (${e.supplier})`).reverse();
+        const series = topExpenses.map(e => e.total).reverse();
 
         new Chartist.Bar('#expense-chart3', {
           labels: labels,
           series: series
         }, {
-          axisY: {
-            labelInterpolationFnc: function(value) {
-              return '$' + value.toLocaleString();
+          horizontalBars: true,
+          axisX: {
+            labelInterpolationFnc: function(value, index) {
+              return index % 2 === 0 ? '$' + value.toLocaleString() : null;
             }
           },
-          axisX: {
+          axisY: {
             labelInterpolationFnc: function(value) {
-              return value;
+              return value; // y-axis shows the labels
             }
           },
           distributeSeries: true,
           chartPadding: {
-            right: 10,
-            left: 20,
-            bottom: 40,
-          },
-          plugins: []
-        });
-      });
-
-    .centered 
-      .expense-container
-        h2 #{name} VS Average MP Contract Spending (April 1, 2024 - March 31, 2025)
-        h3 #{name} is in the #{percentile > 0.5 ? 'top' : 'bottom'} #{(percentile * 100).toFixed(2)}% of MP Contract Spending.
-        #expense-chart4(style="height: 400px; width: 100%; max-width: 900px; margin: 0 auto;")
-
-
-    script.
-      document.addEventListener('DOMContentLoaded', function() {
-
-        const labels = [`${!{JSON.stringify(name)}}`, 'Average MP Spending'];
-        const series = [
-          {
-            value: !{JSON.stringify(expenseAverage)},
-            meta: 'This MP'
-          },
-          {
-            value: !{JSON.stringify(overallAverage)},
-            meta: 'Average MP Spending'
-          }
-        ];
-
-        new Chartist.Bar('#expense-chart4', {
-          labels: labels,
-          series: series
-        }, {
-          axisY: {
-            labelInterpolationFnc: function(value) {
-              return '$' + value.toLocaleString();
-            }
-          },
-          axisX: {
-            labelInterpolationFnc: function(value) {
-              return value;
-            }
-          },
-          distributeSeries: true,
-          chartPadding: {
-            right: 10,
-            left: 30,
-            bottom: 40,
+            right: 0,
+            left: 70,   // May need extra space for long labels
+            bottom: 20,
+            top: 10
           },
           plugins: []
         });

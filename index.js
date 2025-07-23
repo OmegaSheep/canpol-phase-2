@@ -251,6 +251,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         expenseAverage: expenseAverage[0].totalSpent,
         overallAverage: overallAverage[0].average,
         percentile,
+        pieLegend: ['🔴', '🔵', '🟡', '🟠', '🟣'],
     });
 });
 

@@ -210,6 +210,69 @@ body {
     font-weight: bold;
 }
 
+.chart-title {
+    text-align: center;
+    color: black;
+    font-weight: bolder;
+    margin-top: 20px;
+}
+.chart-subtitle {
+    text-align: center;
+    color: black;
+    padding: 0px;
+}
+#chart-legend
+{
+    display: grid;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin: 0 auto;
+}
+
+/* Donut Chart Colors */
+.ct-series-a .ct-slice-donut {
+  stroke: #e05555 !important;
+}
+.ct-series-b .ct-slice-donut {
+  stroke: #6fb8f6 !important;
+}
+.ct-series-c .ct-slice-donut {
+  stroke: #ffe14d !important;
+}
+.ct-series-d .ct-slice-donut {
+  stroke: #e6b84d !important;
+}
+.ct-series-e .ct-slice-donut {
+  stroke: #9d6cff !important;
+}
+.ct-series-f .ct-slice-donut {
+  stroke: #388e2e !important;
+}
+#expense-chart .ct-label {
+  font-weight: bold !important;
+}
+
+/* Bar Chart Colors */
+.ct-series-a .ct-bar {
+  stroke: #e05555 !important;
+}
+.ct-series-b .ct-bar {
+  stroke: #6fb8f6 !important;
+}
+.ct-series-c .ct-bar {
+  stroke: #ffe14d !important;
+}
+.ct-series-d .ct-bar {
+  stroke: #e6b84d !important;
+}
+.ct-series-e .ct-bar {
+  stroke: #9d6cff !important;
+}
+.ct-series-f .ct-bar {
+  stroke: #388e2e !important;
+}
+
 @media (max-width: 768px) {
     .mp-grid-container {
         grid-template-columns: repeat(2, 1fr); /* Two columns on tablets */
@@ -249,5 +312,8 @@ body {
         transform: rotate(-45deg);
         text-anchor: end;
         font-size: 6px !important;
+    }
+    #chart-legend {
+        font-size: medium;
     }
 }
