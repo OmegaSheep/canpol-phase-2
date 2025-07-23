@@ -273,6 +273,10 @@ body {
   stroke: #388e2e !important;
 }
 
+#expense-chart3 {
+    height: 600px !important;
+}
+
 @media (max-width: 768px) {
     .mp-grid-container {
         grid-template-columns: repeat(2, 1fr); /* Two columns on tablets */

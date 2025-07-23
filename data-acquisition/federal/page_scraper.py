@@ -17,9 +17,9 @@ for line in env:
 myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
-mps = mydb["mps"]
+mps = mydb["federal_mps"]
 
-allMps = mps.find({}).sort({ 'name': 1})
+allMps = mps.find({ 'name': 'Mark Carney'}).sort({ 'name': 1})
 
 
 # Set up the driver
@@ -47,6 +47,7 @@ for mp in allMps:
             name = name.split(" ")[0] + " " + name.split(" ")[2]
         
         # name += " Member of Parliament" # Helps English results
+        name += " Deputé" # Helps French Results
             
         # Navigate to the webpage
         url = "https://prciec-rpccie.parl.gc.ca/FR/PublicRegistries/Pages/PublicRegistry.aspx"
@@ -68,24 +69,24 @@ for mp in allMps:
         sleep(3.5)
 
         results = driver.find_elements(By.ID, 'hrefDisplayName')
-        driver.get(mp['link'])
-        # driver.get(results[0].get_attribute("href"))
+        # driver.get(mp['link'])
+        driver.get(results[0].get_attribute("href"))
 
-        titles = driver.find_elements(By.CLASS_NAME, 'ciec-profilepage-subHeader')
+        sections = driver.find_elements(By.CLASS_NAME, 'ciec-profilepage-section')
         items = driver.find_elements(By.CSS_SELECTOR, 'li.ciec-profilepage-declaration')
 
         # print(mp['name'])
         mod = 0
-        for i in range(0, len(titles)):
-            if len(titles[i].text) > 0:
+        for i in range(0, len(sections)):
+            title = sections[i].find_element(By.CLASS_NAME, 'ciec-profilepage-subHeader').text
+            elements = sections[i].find_elements(By.CSS_SELECTOR, 'li.ciec-profilepage-declaration')
+            for e in range(0, len(elements)):
                 doc = {
                     'name': mp['name'],
-                    'category_fr': titles[i].text,
-                    'content_fr': items[i-mod].text, # Chance key names as needed for EN.
+                    'category': title,
+                    'content': elements[e].text, # Change key names as needed for EN.
                 }
                 print(doc)
-            else:
-                mod += 1
         
         # Get the rendered HTML
         # html_content = driver.page_source

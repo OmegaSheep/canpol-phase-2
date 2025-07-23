@@ -1,10 +1,13 @@
 {
     "siteTitle": "Mon député est-il un propriétaire?",
     "federal": {
-        "href": "https://prciec-rpccie.parl.gc.ca/EN/PublicRegistries/Pages/PublicRegistry.aspx",
-        "label": "le Commissariat aux conflits d'intérêts et à l'éthique",
+        "dataSource": {
+            "href": "https://prciec-rpccie.parl.gc.ca/FR/PublicRegistries/Pages/PublicRegistry.aspx",
+            "label": "le Commissariat aux conflits d'intérêts et à l'éthique"
+        },
         "notices": [
-            "Les données reflètent la législature précédente et ne sont pas à jour avec les dernières élections. Nous prévoyons que de nouvelles informations seront disponibles dans les 120 jours suivant les élections."
+            "Le nouveau Parlement est désormais disponible, mais seul Mark Carney a déposé une déclaration éthique à ce jour.",
+            "Les déclarations précédentes des membres actuels sont toujours disponibles."
         ]
     },
     "ab": {
@@ -109,8 +112,12 @@
     "percentage": "Pourcentage",
     "home": "Accueil",
     "about": "À propos",
-    "isALandlord": "<strong translate=no>{{name}}</strong> reçoit un revenu de location",
-    "isNotKnownToBeALandlord": "<strong translate=no>{{name}}</strong> ne reçoit pas de revenu de location",
+    "isALandlord": "{{name}} reçoit un revenu de location",
+    "isNotKnownToBeALandlord": "{{name}} ne reçoit pas de revenu de location",
+    "hasInvestments": "{{name}} détient des investissements importants",
+    "isNotKnownToHaveInvestments": "{{name}} n'est pas connu pour avoir des investissements importants",
+    "unsubmittedDisclosureProperty": "{{name}} n'a pas encore soumis sa déclaration d'éthique concernant la propriété.",
+    "unsubmittedDisclosureInvestments": "{{name}} n'a pas encore soumis sa déclaration d'éthique concernant les investissements.",
     "learnMoreAboutMember": "En savoir plus <span class=visually-hidden>sur {{name}}</span>",
     "onlyLandlords": "Seuls les propriétaires",
     "landlordsByParty": "Propriétaires par parti",

@@ -14,9 +14,12 @@ for line in env:
 myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
-reps = mydb["mps_copy"] # Change to relevant table.
+# Rename the collection from 'mps_copy' to 'federal_mps'
+def rename_collection(db, old_name, new_name):
+    if old_name in db.list_collection_names():
+        db[old_name].rename(new_name)
+        print(f"Renamed collection '{old_name}' to '{new_name}'")
+    else:
+        print(f"Collection '{old_name}' does not exist.")
 
-all_reps = reps.find({})
-
-for mla in all_reps:
-    reps.find_one_and_update({ 'name': mla['name'] }, { '$set': { 'constituency_slug': slugify(mla['constituency']) }})
+rename_collection(mydb, "mps_copy", "federal_mps")

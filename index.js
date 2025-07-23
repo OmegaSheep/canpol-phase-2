@@ -12,9 +12,10 @@ const uri = process.env.MONGO_URI;
 const dbClient = new MongoClient(uri);
 const database = dbClient.db("public_gov");
 
-const MPS = database.collection('mps'); // MP Data sourced from ourcommons.ca 
-const SHEET_DATA = database.collection('sheet_data'); // Isaac's Sheet Data
+const MPS = database.collection('federal_mps'); // MP Data sourced from ourcommons.ca 
+const MPS_STATUS = database.collection('mps_status'); // Isaac's Sheet Data
 const DISCLOSURES = database.collection('disclosures'); // Disclosures sourced from the ethics portal directly
+const DISCLOSURES_FR = database.collection('disclosures_fr'); // Disclosures sourced from the ethics portal directly
 
 const EXPENSES = database.collection('expenses'); // Federal Expense Data
 
@@ -125,14 +126,14 @@ app.get('/:lang', async (req, res) => {
     let members = await MPS.aggregate([
         {
             $lookup: {
-                from: "sheet_data",
+                from: "mps_status",
                 localField: "name",
                 foreignField: "name",
-                as: "sheet_data_matches"
+                as: "mps_status_matches"
             },
         },
     ]).map(member => {
-        for (const match of member.sheet_data_matches) {
+        for (const match of member.mps_status_matches) {
             if (match.landlord === "Y") member.landlord = true;
             if (match.investor === "Y") member.investor = true;
         }
@@ -173,11 +174,16 @@ app.get('/:lang', async (req, res) => {
 app.get('/:lang/federal/:constituency', async (req, res) => {
     const { constituency, lang } = req.params;
 
-    if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
+    // if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
 
     let mp = await MPS.findOne({ constituency_slug: constituency }, COLLATION);
-    let { home_owner, landlord, investor } = await SHEET_DATA.findOne({ name: mp.name }, COLLATION);
-    let disclosures = await DISCLOSURES.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    let { home_owner, landlord, investor } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
+    let disclosures = [];
+    if (lang === "fr") {
+        disclosures = await DISCLOSURES_FR.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    } else {
+        disclosures = await DISCLOSURES.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    }
 
     // Top 5 categories of expense spends for this MP
     let expenseTypes = await EXPENSES.aggregate([
@@ -235,7 +241,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         }
     ]).toArray();
 
-    const zScore = (expenseAverage[0].totalSpent - overallAverage[0].average) / overallAverage[0].stdDev;
+    const zScore = (expenseAverage[0]?.totalSpent - overallAverage[0]?.average) / overallAverage[0].stdDev;
     const percentile = normalCDF(zScore);
 
     res.render('mp', {
@@ -248,8 +254,8 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         expenseTypes,
         expenseSuppliers,
         topExpenses,
-        expenseAverage: expenseAverage[0].totalSpent,
-        overallAverage: overallAverage[0].average,
+        expenseAverage: expenseAverage[0]?.totalSpent,
+        overallAverage: overallAverage[0]?.average,
         percentile,
         pieLegend: ['🔴', '🔵', '🟡', '🟠', '🟣'],
     });
@@ -508,7 +514,6 @@ app.get('/:lang/on/:constituency', async (req, res) => {
         portraitPath: "mpp_images",
         ...member,
         groupedDisclosures: groupDisclosures(disclosures),
-        homeowner: homeOwnerText(member.name, disclosures),
         landlord: landlordText(member.name, disclosures),
         investor: investorText(member.name, disclosures),
     });

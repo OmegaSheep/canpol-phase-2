@@ -9,10 +9,10 @@ for line in env:
 
 myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
-mps = mydb["mps"]
+mps = mydb["mps_copy"]
 
 base_url = 'https://www.ourcommons.ca/'
-f = open('parliament.html') # Save a copy to your local and run it against that.
+f = open('data-acquisition/federal/parliament.html') # Save a copy to your local and run it against that.
 
 name = ""
 party = ""
