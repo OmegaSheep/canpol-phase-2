@@ -1,10 +1,5 @@
 ### SASKATCHEWAN READ ME
 
-Saskatchewan has consistent ethics disclosures.
+Saskatchewan had consistent PDF ethics disclosures - but unfortunately the newest ones are literally not machine readable.
 
-They are released in PDF form.
-
-We have not tried to process them yet as the data for the latest SK parliament is not available yet.
-
-Cursory investigation suggests the data quality and readability should be quite good. Fingers crossed.
-
+0/10 
