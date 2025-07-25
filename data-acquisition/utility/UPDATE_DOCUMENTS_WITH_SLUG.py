@@ -14,7 +14,7 @@ for line in env:
 myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
-reps = mydb["british_columbia_mlas"] # Chance to relevant table.
+reps = mydb["mps_copy"] # Change to relevant table.
 
 all_reps = reps.find({})
 

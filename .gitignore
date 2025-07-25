@@ -7,4 +7,6 @@ fly.toml
 Dockerfile
 .vscode
 data-acquisition/private/
+data-acquisition/expenses/
 *.pdf
+parliament.html

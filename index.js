@@ -12,9 +12,12 @@ const uri = process.env.MONGO_URI;
 const dbClient = new MongoClient(uri);
 const database = dbClient.db("public_gov");
 
-const MPS = database.collection('mps'); // MP Data sourced from ourcommons.ca 
-const SHEET_DATA = database.collection('sheet_data'); // Isaac's Sheet Data
+const MPS = database.collection('federal_mps'); // MP Data sourced from ourcommons.ca 
+const MPS_STATUS = database.collection('mps_status'); // Isaac's Sheet Data
 const DISCLOSURES = database.collection('disclosures'); // Disclosures sourced from the ethics portal directly
+const DISCLOSURES_FR = database.collection('disclosures_fr'); // Disclosures sourced from the ethics portal directly
+
+const EXPENSES = database.collection('expenses'); // Federal Expense Data
 
 const ONTARIO_MPPS = database.collection('ontario_mpps');
 const ONTARIO_DISCLOSURES = database.collection('ontario_disclosures');
@@ -47,6 +50,20 @@ const SASKATCHEWAN_MLAS = database.collection('saskatchewan_mlas');
 const SASKATCHEWAN_DISCLOSURES = database.collection('saskatchewan_disclosures');
 
 const COLLATION = { collation : {locale: "fr_CA", strength: 2 }}
+
+function normalCDF(z) {
+    // Abramowitz and Stegun formula 7.1.26
+    // Approximation of the cumulative distribution function for the standard normal distribution
+    var t = 1 / (1 + 0.2316419 * Math.abs(z));
+    var d = 0.3989423 * Math.exp(-z * z / 2);
+    var prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    
+    if (z > 0) {
+        return 1 - prob;
+    } else {
+        return prob;
+    }
+}
 
 const app = express();
 
@@ -109,14 +126,14 @@ app.get('/:lang', async (req, res) => {
     let members = await MPS.aggregate([
         {
             $lookup: {
-                from: "sheet_data",
+                from: "mps_status",
                 localField: "name",
                 foreignField: "name",
-                as: "sheet_data_matches"
+                as: "mps_status_matches"
             },
         },
     ]).map(member => {
-        for (const match of member.sheet_data_matches) {
+        for (const match of member.mps_status_matches) {
             if (match.landlord === "Y") member.landlord = true;
             if (match.investor === "Y") member.investor = true;
         }
@@ -157,11 +174,75 @@ app.get('/:lang', async (req, res) => {
 app.get('/:lang/federal/:constituency', async (req, res) => {
     const { constituency, lang } = req.params;
 
-    if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
+    // if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
 
     let mp = await MPS.findOne({ constituency_slug: constituency }, COLLATION);
-    let { home_owner, landlord, investor } = await SHEET_DATA.findOne({ name: mp.name }, COLLATION);
-    let disclosures = await DISCLOSURES.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    let { home_owner, landlord, investor } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
+    let disclosures = [];
+    if (lang === "fr") {
+        disclosures = await DISCLOSURES_FR.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    } else {
+        disclosures = await DISCLOSURES.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+    }
+
+    // Top 5 categories of expense spends for this MP
+    let expenseTypes = await EXPENSES.aggregate([
+        { $match: { name: mp.name.toUpperCase() } },
+        {
+            $group: {
+            _id: "$description",
+            total: { $sum: "$total" },
+            count: { $sum: 1 }
+            }
+        },
+        { $sort: { total: -1 } }
+    ]).toArray();
+
+    // Top 5 suppliers for this MP's expenses
+    let expenseSuppliers = await EXPENSES.aggregate([
+        { $match: { name: mp.name.toUpperCase() } },
+        {
+            $group: {
+            _id: "$supplier",
+            totalSpent: { $sum: "$total" },
+            transactions: { $sum: 1 }
+            }
+        },
+        { $sort: { totalSpent: -1 } }
+    ]).toArray();
+
+    // Top 5 single largest expenses for this MP
+    let topExpenses = await EXPENSES.aggregate([
+        { $match: { name: mp.name.toUpperCase() } },
+        { $sort: { total: -1 } },
+        { $limit: 5 }
+    ]).toArray();
+
+    // Average and standard deviation of total expenses for all MPs
+    let overallAverage = await EXPENSES.aggregate([
+        { $group: { _id: "$name", totalSpent: { $sum: "$total" } } },
+        {
+            $group: {
+            _id: null,
+            average: { $avg: "$totalSpent" },
+            stdDev: { $stdDevSamp: "$totalSpent" }
+            }
+        }
+    ]).toArray();
+
+    // Total spend for this MP.
+    let expenseAverage = await EXPENSES.aggregate([
+        { $match: { name: mp.name.toUpperCase() } },
+        {
+            $group: {
+            _id: "$name",
+            totalSpent: { $sum: "$total" }
+            }
+        }
+    ]).toArray();
+
+    const zScore = (expenseAverage[0]?.totalSpent - overallAverage[0]?.average) / overallAverage[0].stdDev;
+    const percentile = normalCDF(zScore);
 
     res.render('mp', {
         title: `${mp.name} | Member Details`,
@@ -170,6 +251,13 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         landlord,
         investor,
         groupedDisclosures: groupDisclosures(disclosures),
+        expenseTypes,
+        expenseSuppliers,
+        topExpenses,
+        expenseAverage: expenseAverage[0]?.totalSpent,
+        overallAverage: overallAverage[0]?.average,
+        percentile,
+        pieLegend: ['🔴', '🔵', '🟡', '🟠', '🟣'],
     });
 });
 
@@ -426,7 +514,6 @@ app.get('/:lang/on/:constituency', async (req, res) => {
         portraitPath: "mpp_images",
         ...member,
         groupedDisclosures: groupDisclosures(disclosures),
-        homeowner: homeOwnerText(member.name, disclosures),
         landlord: landlordText(member.name, disclosures),
         investor: investorText(member.name, disclosures),
     });

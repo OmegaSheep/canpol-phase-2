@@ -3,7 +3,7 @@ import html
 
 # IMAGE GATHERING
 base_url = 'https://www.ourcommons.ca/'
-f = open('parliament.html') # Save a copy to your local and run it against that.
+f = open('data-acquisition/federal/parliament.html') # Save a copy to your local and run it against that.
 for line in f.readlines():
     if '<img' in line:
         img_src = line.split(' src="/')[1].split(' loading="lazy"')[0]
@@ -20,7 +20,7 @@ for line in f.readlines():
             image_name = html.unescape(image_name)
             # print(image_name)
             # Save the image content to a file
-            with open(f'images/{image_name}', 'wb') as file:
+            with open(f'public/images/{image_name}', 'wb') as file:
                 for chunk in response.iter_content(1024):
                     file.write(chunk)
                 print(f"Image downloaded: {image_name}")
