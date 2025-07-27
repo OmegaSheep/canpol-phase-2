@@ -448,8 +448,16 @@ const PROVINCES = {
     sk: {
         collection: SASKATCHEWAN_MLAS,
         portraitPath: "sk_mla_images",
-        disclosureCollection: "sk_disclosures",
+        disclosureCollection: "saskatchewan_disclosures",
         mapDisclosures: member => {
+            for (const disclosure of member.disclosures) { 
+                if (disclosure['category'] == 'Property Interests' && !disclosure['content'].includes('Personal Residence')) {
+                    member.landlord = true;
+                }
+                if (disclosure['category'] == 'Investment Funds, Mutual Funds, Investment Trusts or Similar Securities') {
+                    member.investor = true;
+                }
+            }
             return member;
         },
     },
@@ -812,9 +820,17 @@ app.get('/:lang/sk/:constituency', async (req, res) => {
     let mla = await SASKATCHEWAN_MLAS.findOne({ constituency_slug }, COLLATION);
     let disclosures = await SASKATCHEWAN_DISCLOSURES.find({ name: mla.name }, COLLATION).sort({ category: 1 }).toArray();
 
-    let homeowner = false;
     let landlord = false;
     let investor = false;
+    for (let i=0; i<disclosures.length;++i) {
+        let disclosure = disclosures[i];
+        if (disclosure['category'] == 'Property Interests' && !disclosure['content'].includes('Personal Residence')) {
+            landlord = true;
+        }
+        if (disclosure['category'] == 'Investment Funds, Mutual Funds, Investment Trusts or Similar Securities') {
+            investor = true;
+        }
+    }
 
     res.render('member', {
         title: 'Member Details',
@@ -822,9 +838,8 @@ app.get('/:lang/sk/:constituency', async (req, res) => {
         portraitPath: "sk_mla_images",
         ...mla,
         groupedDisclosures: groupDisclosures(disclosures),
-        homeowner: "No data is available on Home Ownership. See the notice on the main page.",
-        landlord: "No data is available on Property Ownership. See the notice on the main page.",
-        investor: "No data is available on Assets & Investments. See the notice on the main page.",
+        landlord: englishHomeTextGenerator(mla['name'], "Landlord", landlord),
+        investor: englishInvestorTextGenerator(mla['name'], investor),
     });
 });
 

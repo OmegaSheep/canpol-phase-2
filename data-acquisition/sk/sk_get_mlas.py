@@ -19,7 +19,7 @@ for line in env:
 myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
-mnas = mydb["sk_mlas"]
+mnas = mydb["saskatchewan_mlas"]
 
 # Set up the driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
