@@ -44,7 +44,9 @@
         "dataSource": {
             "href": "https://pds.oico.on.ca/Pages/Public/PublicDisclosures.aspx",
             "label": "le Bureau du commissaire à l’intégrité"
-        }
+        },
+        "notices": [
+        ]
     },
     "qc": {
         "title": "Mon député est-il un propriétaire?",

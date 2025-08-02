@@ -1,4 +1,4 @@
-"""We don't create slugs in the individual data scripts, especially older ones - so this can be used to add them later."""
+"""Renames old tables for archiving."""
 
 import pymongo
 from slugify import slugify
@@ -22,4 +22,4 @@ def rename_collection(db, old_name, new_name):
     else:
         print(f"Collection '{old_name}' does not exist.")
 
-rename_collection(mydb, "mps_copy", "federal_mps")
+rename_collection(mydb, "ontario_disclosures", "ontario_disclosures_43")

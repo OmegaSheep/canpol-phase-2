@@ -47,13 +47,13 @@ for line in f.readlines():
         print(f"MLA {name} not found in database.")
         continue
 
-    disclosure_item = {
-        'name': name,
-        'category': category,
-        'content': line
-    }
-
-    disclosures.insert_one(disclosure_item)
+    if name == "Matt Love":
+        disclosure_item = {
+            'name': name,
+            'category': category,
+            'content': line
+        }
+        disclosures.insert_one(disclosure_item)
 
 f.close()
 

@@ -5,7 +5,7 @@ This file can be used to insert data from a reviewed text document into the data
 import pymongo
 import ast
 import sys
-sys.stdout.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-16')
 
 env = open('../../.env')
 mongo_uri=''
@@ -17,10 +17,10 @@ myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
 # Table you plan to insert into.
-ACTIVE_TABLE = mydb["saskatchewan_mlas"]
+ACTIVE_TABLE = mydb["ontario_disclosures"]
 
 # Text file with your JSON blobs. Chance encoding as needed.
-f = open('sk_mlas2.txt', 'r', encoding='utf-8', errors='replace')
+f = open('on_final_disc.txt', 'r', encoding='utf-8', errors='replace')
 
 names = []
 for line in f.readlines():

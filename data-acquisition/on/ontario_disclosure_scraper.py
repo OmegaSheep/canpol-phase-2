@@ -5,39 +5,41 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
-# import pymongo
-# import sys
-# sys.stdout.reconfigure(encoding='utf-8')
+import pymongo
+import sys
+sys.stdout.reconfigure(encoding='utf-16')
 
-# env = open('.env')
-# mongo_uri=''
-# for line in env:
-#     if line.startswith('MONGO_URI'):
-#         mongo_uri = line.split('MONGO_URI=')[1].replace("'", "")
+env = open('../../.env')
+mongo_uri=''
+for line in env:
+    if line.startswith('MONGO_URI'):
+        mongo_uri = line.split('MONGO_URI=')[1].replace("'", "")
 
-# myclient = pymongo.MongoClient(mongo_uri)
-# mydb = myclient["public_gov"]
+myclient = pymongo.MongoClient(mongo_uri)
+mydb = myclient["public_gov"]
 
-# mpps = mydb["mpps"]
+mpps = mydb["ontario_mpps"]
 
-# allMpps = mpps.find({}).sort({ 'name': 1})
+allMpps = mpps.find({}).sort({ 'name': 1 })
 
 
 # Set up the driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-f = open('ontario_proper_names.txt', 'r') # We can use the data from ontario_mpp_scraper.py for this
-lines = f.readlines()
+# f = open('ontario_proper_names.txt', 'r') # We can use the data from ontario_mpp_scraper.py for this
+# lines = f.readlines()
 
-for mpp in lines:
-    mpp = {
-        'name': mpp.rstrip('\n')
-    }
+for mpp in allMpps:
+    # mpp = {
+    #     'name': mpp.rstrip('\n')
+    # }
     try:
-        name = mpp['name']
-        if (name == 'Jennie Stevens'):
-            name = "Jennifer Stevens"
-            
+        true_name = mpp['name']
+        name = true_name
+
+        if len(name.split(' ')) == 3 and '.' in name.split(' ')[1]:
+            name = name.split(' ')[0] + ' ' + name.split(' ')[2]
+        
         # Navigate to the webpage
         url = "https://pds.oico.on.ca/Pages/Public/PublicDisclosures.aspx"
         driver.get(url)
@@ -47,15 +49,28 @@ for mpp in lines:
 
         search_box = driver.find_element(By.ID, 'BodyContent_ddlYear')
         select_dropdown = Select(search_box)
-        select_dropdown.select_by_value("2024 (including byelections)")
+        select_dropdown.select_by_value("2025")
 
         name_box = driver.find_element(By.ID, 'BodyContent_ddlMemberName')
         select_dropdown = Select(name_box)
         
+        # Lots of name mismatches relative to the official ON MPP Portal. . . 
         if ('Sarrazin' in name):
-            select_dropdown.select_by_value('46cc5c69-f7a1-ef11-8a69-002248b33aec')
+            select_dropdown.select_by_value('c8ceff97-3d03-f011-bae3-002248b154b5')
         elif ('France G' in name):
-            select_dropdown.select_by_value('20cfd858-4d86-ef11-ac21-000d3af33ddc')
+            select_dropdown.select_by_value('6c80018e-3e04-f011-bae3-002248b154b5')
+        elif ('Steve Pinsonneault' in name):
+            select_dropdown.select_by_value('6932cb57-6b36-f011-8c4e-002248b154b5')
+        elif ('Victor Fedeli' in name):
+            select_dropdown.select_by_value('1f8b7671-953d-f011-b4cc-002248b154b5')
+        elif ('Hardeep Singh Grewal' in name):
+            select_dropdown.select_by_value('5200ca0f-703a-f011-b4cc-002248b154b5')
+        elif ('Raymond Sung Joon Cho' in name):
+            select_dropdown.select_by_value('6292128c-1725-f011-8c4d-002248b154b5')
+        elif ('Cerjanec' in name):
+            select_dropdown.select_by_value('8911415e-b73c-f011-b4cc-002248b154b5')
+        elif ('Robert Bailey' in name):
+            select_dropdown.select_by_value('239499bc-7c27-f011-8c4d-002248b154b5')
         else:
             select_dropdown.select_by_visible_text(name)
 
@@ -70,27 +85,27 @@ for mpp in lines:
         # search_button.click()
 
         incomeObj = {
-            'name': name,
+            'name': true_name,
             'category': 'Income',
             'content': income,
         }
         assetsObj = {
-            'name': name,
+            'name': true_name,
             'category': 'Assets',
             'content': assets,
         }
         liabilityObj = {
-            'name': name,
+            'name': true_name,
             'category': 'Liabilities',
             'content': liabilities,
         }
         giftsAndBenefitsObj = {
-            'name': name,
+            'name': true_name,
             'category': 'Gifts and Benefits',
             'content': gifts,
         }
         officesObj = {
-            'name': name,
+            'name': true_name,
             'category': 'Offices',
             'content': offices,
         }
@@ -100,25 +115,6 @@ for mpp in lines:
         print(liabilityObj)
         print(giftsAndBenefitsObj)
         print(officesObj)
-
-        # results = driver.find_elements(By.ID, 'hrefDisplayName')
-        # driver.get(results[0].get_attribute("href"))
-
-        # titles = driver.find_elements(By.CLASS_NAME, 'ciec-profilepage-subHeader')
-        # items = driver.find_elements(By.CSS_SELECTOR, 'li.ciec-profilepage-declaration')
-
-        # # print(mp['name'])
-        # mod = 0
-        # for i in range(0, len(titles)):
-        #     if len(titles[i].text) > 0:
-        #         doc = {
-        #             'name': mpp['name'],
-        #             'category': titles[i].text,
-        #             'content': items[i-mod].text,
-        #         }
-        #         print(doc)
-        #     else:
-        #         mod += 1
 
     except Exception as e:
         print(f"Error ${mpp['name']}: {str(e)}")
