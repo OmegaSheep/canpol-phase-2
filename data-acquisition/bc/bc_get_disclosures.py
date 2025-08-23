@@ -9,6 +9,7 @@ from pypdf import PdfReader
 from time import sleep
 import sys
 import pymongo
+from slugify import slugify
 sys.stdout.reconfigure(encoding='utf-8')
 
 env = open('.env')
@@ -51,24 +52,36 @@ for p in p_tags:
     name_backwards = full_text.split(" - ")[0]
     name_backwards = name_backwards.replace("K.C., ", "")
     name = name_backwards.split(", ")[1] + " " + name_backwards.split(", ")[0]
-        
+
+    # Two Manual Corrections
+    if name == "Qwulti'stunaat Toporowski":
+        name = "Debra Toporowski (Qwulti'stunaat)"
+    
+    if name == "Amshen Phillip":
+        name = "Joan Phillip (Amshen)"
+
+    if name == "Laanas Davidson":
+        name = "Tamara Davidson (Laanas)"
+
     found = bc_mlas.find_one({ 'name': name})
 
     if not found:
-        # print("Error for", name)
+        print("Error for", name)
         continue
     
     else:
         pdf_tag = p.find_elements(By.TAG_NAME, 'a')[-1]
         pdf_url = pdf_tag.get_attribute('href')
+        true_base_url = "https://lims.leg.bc.ca/pdms/file/content-committees/AccountabilityDocuments/MLAs/2025/Public%20Disclosures%20-%20CIO/"
         pdf_name = pdf_url.split('/')[-1].split('"')[0]
-        name_to_pdf_dict[name] = pdf_name
+        name_to_pdf_dict[name] = slugify(pdf_name)+".pdf"
         name_list.append(name)
-
-        # print(name, pdf_name)
-        # urlretrieve(pdf_url, pdf_name)
+        urlretrieve(true_base_url + pdf_name, slugify(pdf_name)+".pdf")
 
 def print_content(category, content, name):
+    content = content.lstrip()
+    content = content.rstrip()
+    content = content.replace("S hares", "Shares") # Catch a small blip in some cases
     if (content not in ['n/a', 'N/A', "", " n/a"]):
         print({
             'name': name,
@@ -81,164 +94,54 @@ def read_pdf_basic2(name, pdf_path):
     reader = PdfReader(pdf_path)
     
     # Extract text from second page
-    second_page_text = reader.pages[1].extract_text()
-    # print(second_page_text)
+    all_pages = ""
+    for p in reader.pages:
+        all_pages += p.extract_text()
 
-    lines = second_page_text.split("\n")
+    lines = all_pages.split("\n")
 
     disclosure_type = ""
     content = ""
     for line in lines:
-        if (disclosure_type == "" and "INCOME" not in line):
-            continue
-
-        if (line.isspace() or line == "\n"):
-            continue
-
-        if line in ["N/A", "n/a"]:
+        if line.startswith("SOURCES OF INCOME"):
+            disclosure_type = "Source(s) of Income"
             content = ""
             continue
-        
-        if "INCOME" in line:
-            disclosure_type = "Income"
-            continue
-        
-        if line.startswith("Source") and disclosure_type == "Income":
-            continue
     
-        if line.startswith("Nature of Income") and disclosure_type == "Income":
-            continue
-
         if line.startswith("ASSETS"):
             print_content(disclosure_type, content, name)
             disclosure_type = "Assets"
             content = ""
             continue
-
-        if line.startswith("Real Property"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Property"
-            content = ""
-            line = line.replace("Real Property ", "")
-
-        if line.startswith("Bank, Trust Company or Other Financial"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Financial Assets"
-            content = ""
-            continue
-
-        if line.startswith("Institution") and line.replace("Institution", "").isspace():
-            continue
-
-        if line.startswith("Publicly Traded Securities"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Securities"
-            content = ""
-            continue
-
-        if "and Registered Retirement" in line:
-            continue
-
-        if line.startswith("Plans") and disclosure_type == "Securities":
-            continue
-
-        if line.startswith("Canada Savings Bonds"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Bonds & Certificates"
-            content = ""
-            continue
-
-        if "Guaranteed by Government" in line and disclosure_type == "Bonds & Certificates":
-            continue
-
-        if line.rstrip(" \n").endswith("Certificates") and disclosure_type == "Bonds & Certificates":
-            continue
-
-        if line.startswith("Mutual Funds"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Mutual Funds"
-            content = ""
-            line = line.replace("Mutual Funds ", "")
-
-        if "Guaranteed Investment Certificates" in line:
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Bonds & Certificates"
-            content = ""
-            continue
-
-        if line.startswith("Similar Instruments") and disclosure_type == "Bonds & Certificates":
-            continue
-
-        if line.startswith("Annuities and Life Insurance Policies"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Annuities and Life Insurance Policies"
-            content = ""
-            line = line.replace("Annuities and Life Insurance Policies ", "")
-
-        if line.startswith("Pension Rights"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Pension Rights"
-            content = ""
-            line = line.replace("Pension Rights ", "")
-
-        if line.startswith("Other Assets"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Assets"
-            content = ""
-            line = line.replace("Other Assets ", "")
-
-        if line.startswith("Gifts and Personal Benefits"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Gifts"
-            content = ""
-            line = line.replace("Gifts and Personal Benefits ", "")
-            
-        if line.startswith("Travel on Non-commercial Aircraft"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Travel"
-            content = ""
-            line = line.replace("Travel on Non-commercial Aircraft ", "")
-            
+    
         if line.startswith("LIABILITIES"):
             print_content(disclosure_type, content, name)
             disclosure_type = "Liabilities"
             content = ""
             continue
-            
-        if line.startswith("Mortgages"):
+    
+        if line.startswith("GIFTS DISCLOSED"):
             print_content(disclosure_type, content, name)
-            disclosure_type = "Mortgages"
-            content = ""
-            line = line.replace("Mortgages ", "")
-            
-        if line.startswith("Loans or Lines of Credit"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Loans or Lines of Credit"
-            content = ""
-            line = line.replace("Loans or Lines of Credit ", "")
-            
-        if line.startswith("Guarantees"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Guarantees"
-            content = ""
-            line = line.replace("Guarantees ", "")
-            
-        if line.startswith("Other") and not line.startswith("Other Assets"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Liabilities"
-            content = ""
-            line = line.replace("Other ", "")
-            
-        if line.startswith("FINANCIAL INTERESTS"):
-            print_content(disclosure_type, content, name)
-            disclosure_type = "Financial Interests"
+            disclosure_type = "Gifts"
             content = ""
             continue
+
+        # page break
+        if "-2- " in line:
+            continue
+
+        if "- 2 -" in line:
+            continue
+
+        # Content is done
+        if line.startswith("Filed with the Clerk of the Legislative Assembly"):
+            print_content(disclosure_type, content, name)
+            break
 
         if len(content) == 0:
             content += line.rstrip(" ")
         else:
             content += "\n"+line.rstrip(" ")
 
-# for name in name_list:
-#     read_pdf_basic2(name, name_to_pdf_dict[name])
+for name in name_list:
+    read_pdf_basic2(name, name_to_pdf_dict[name])

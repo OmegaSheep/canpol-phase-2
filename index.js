@@ -440,8 +440,23 @@ const PROVINCES = {
     bc: {
         collection: BRITISH_COLUMBIA_MLAS,
         portraitPath: "bc_mla_images",
-        disclosureCollection: "bc_disclosures",
+        disclosureCollection: "british_columbia_disclosures",
         mapDisclosures: member => {
+            for (const disclosure of member.disclosures) { 
+                if (disclosure['category'] == 'Source(s) of Income' && disclosure['content'].includes('rental income')) {
+                    member.landlord = true;
+                }
+                if (disclosure['category'] == 'Assets' 
+                    && (
+                        disclosure['content'].includes('Mutual Funds') ||
+                        disclosure['content'].includes('TFSA') ||
+                        disclosure['content'].includes('RRSP') ||
+                        disclosure['content'].includes('Investments') ||
+                        disclosure['content'].includes('ETF')
+                    )) {
+                    member.investor = true;
+                }
+            }
             return member;
         },
     },
@@ -851,9 +866,25 @@ app.get('/:lang/bc/:constituency', async (req, res) => {
     let mla = await BRITISH_COLUMBIA_MLAS.findOne({ constituency_slug }, COLLATION);
     let disclosures = await BRITISH_COLUMBIA_DISCLOSURES.find({ name: mla.name }, COLLATION).sort({ category: 1 }).toArray();
 
-    let homeowner = false;
     let landlord = false;
     let investor = false;
+    for (let i=0; i<disclosures.length;++i) { 
+        let disclosure = disclosures[i];
+        if (disclosure['category'] == 'Source(s) of Income' && disclosure['content'].includes('rental income')) {
+            landlord = true;
+        }
+        if (disclosure['category'] == 'Assets' 
+            && (
+                disclosure['content'].includes('PID') ||
+                disclosure['content'].includes('Mutual Funds') ||
+                disclosure['content'].includes('TFSA') ||
+                disclosure['content'].includes('RRSP') ||
+                disclosure['content'].includes('Investments') ||
+                disclosure['content'].includes('ETF')
+            )) {
+            investor = true;
+        }
+    }
 
     res.render('member', {
         title: 'Member Details',
@@ -861,9 +892,8 @@ app.get('/:lang/bc/:constituency', async (req, res) => {
         portraitPath: "bc_mla_images",
         ...mla,
         groupedDisclosures: groupDisclosures(disclosures),
-        homeowner: "No data is available on Home Ownership. See the notice on the main page.",
-        landlord: "No data is available on Property Ownership. See the notice on the main page.",
-        investor: "No data is available on Assets & Investments. See the notice on the main page.",
+        landlord: englishHomeTextGenerator(mla['name'], "Landlord", landlord),
+        investor: englishInvestorTextGenerator(mla['name'], investor),
     });
 });
 
@@ -886,18 +916,6 @@ function groupDisclosures(disclosures) {
 
 // These are used for the Ontario MPP details pages.
 // TODO: find a better home for this.
-
-function homeOwnerText(name, disclosures) {
-    for (let i = 0; i < disclosures.length; ++i) {
-        if (disclosures[i].category == 'Liabilities') {
-            if (disclosures[i].content.includes('Mortgage')) {
-                return `${name} is a Home Owner.`;
-            }
-        }
-    }
-    return `${name} is not known to be a Home Owner.`;
-}
-
 function landlordText(name, disclosures) {
     for (let i = 0; i < disclosures.length; ++i) {
         if (disclosures[i].category == 'Income') {

@@ -17,10 +17,10 @@ myclient = pymongo.MongoClient(mongo_uri)
 mydb = myclient["public_gov"]
 
 # Table you plan to insert into.
-ACTIVE_TABLE = mydb["ontario_disclosures"]
+ACTIVE_TABLE = mydb["british_columbia_disclosures"]
 
 # Text file with your JSON blobs. Chance encoding as needed.
-f = open('on_final_disc.txt', 'r', encoding='utf-8', errors='replace')
+f = open('bc_disclosures_true.txt', 'r', encoding='utf-8', errors='replace')
 
 names = []
 for line in f.readlines():

@@ -24,8 +24,8 @@
             "label": "Legislative Assembly of British Columbia"
         },
         "notices": [
-            "British Columbia has not released ethics disclosures for the most recent provincial government.",
-            "When contacted, the Legislative Library indicated this data should become available by the end of May."
+            "Unlike other jurisdictions, for BC we currently only flag landlords who directly collect rental income, not those who own multiple properties.",
+            "We are working on an update to better distinguish between these cases for all jurisdictions."
         ]
     },
     "sk": {
@@ -87,8 +87,8 @@
             "label": "Legislative Assembly of New Brunswick"
         },
         "notices": [
-            "New Brunswick is behind schedule on their ethics disclosures.",
-            "We are re-evaluating the exact state of the data after receiving conflicting information from different parties, and will have updates soon."
+            "New Brunswick has released most of their ethics disclosures - but they are difficult to process.",
+            "We are working on it."
         ]
     },
     "pe": {
