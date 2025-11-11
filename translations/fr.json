@@ -8,14 +8,16 @@
         "notices": [
             "Le nouveau Parlement est désormais disponible, mais seul Mark Carney a déposé une déclaration éthique à ce jour.",
             "Les déclarations précédentes des membres actuels sont toujours disponibles."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "ab": {
         "title": "Mon député est-il un propriétaire?",
         "dataSource": {
             "href": "https://www.ethicscommissioner.ab.ca/disclosure/mla-public-disclosure/",
             "label": "le Bureau du commissaire à l'éthique"
-        }
+        },
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "bc": {
         "title": "Mon député est-il un propriétaire?",
@@ -26,7 +28,8 @@
         "notices": [
             "Contrairement à d'autres juridictions, en Colombie-Britannique, nous ne signalons que les propriétaires qui perçoivent directement les revenus locatifs, et non ceux qui possèdent plusieurs biens immobiliers.",
             "Nous travaillons actuellement à une mise à jour afin de mieux distinguer ces cas dans toutes les juridictions."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "sk": {
         "title": "Mon député est-il un propriétaire?",
@@ -37,7 +40,8 @@
         "notices": [
             "Dans un revers pour l'accessibilité et la transparence, la Saskatchewan a publié ses dernières déclarations d'éthique dans un format non lisible par machine.",
             "Nous les avons transcrites à la main pour votre consommation."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "on": {
         "title": "Mon député est-il un propriétaire?",
@@ -46,21 +50,28 @@
             "label": "le Bureau du commissaire à l’intégrité"
         },
         "notices": [
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "qc": {
         "title": "Mon député est-il un propriétaire?",
         "dataSource": {
             "href": "https://www.ced-qc.ca/fr/registres-publics/sommaires-des-declarations-des-interets-personnels/22-membres-du-conseil-executif-et-deputes",
             "label": "Sommaires des déclarations des intérêts personnels"
-        }
+        },
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "nl": {
         "title": "Mon député est-il un propriétaire?",
+        "dataSource": {
+            "href": "https://theindependent.ca/news/only-province-in-the-dark-inside-n-l-s-broken-ethics-system/",
+            "label": "The Independent"
+        },
         "notices": [
             "Toutes les données proviennent du travail d'Isaac Peltz et contiennent un ensemble limité de données que les MHA nous ont volontairement communiquées.",
             "Terre-Neuve-et-Labrador ne publie par ailleurs aucune donnée publique sur la divulgation de l'éthique."
-        ]
+        ],
+        "allDataSourcedFrom": "Pour en savoir plus sur le manque de transparence à Terre-Neuve, consultez <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "mb": {
         "title": "Mon député est-il un propriétaire?",
@@ -68,7 +79,8 @@
             "href": "https://ethicsmanitoba.ca/PublicDisclosure/SearchMember",
             "label": "Bureau du commissaire à l'éthique"
         },
-        "notices": []
+        "notices": [],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "ns": {
         "title": "Mon député est-il un propriétaire?",
@@ -78,7 +90,8 @@
         },
         "notices": [
             "Les informations fournies par la Nouvelle-Écosse ne sont pas aussi complètes que celles fournies par d'autres juridictions. Le contenu des déclarations est exact, mais nous nous efforçons d'améliorer la façon dont nous définissons et signalons les propriétaires."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     
     "nb": {
@@ -90,7 +103,8 @@
         "notices": [
             "Le Nouveau-Brunswick a publié la plupart de ses déclarations éthiques, mais elles sont difficiles à traiter.",
             "Nous y travaillons."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "pe": {
         "title": "Mon député est-il un propriétaire?",
@@ -100,9 +114,9 @@
         },
         "notices": [
             "Les informations fournies par l'Île-du-Prince-Édouard ne sont pas aussi complètes que celles fournies par d'autres juridictions. Le contenu des déclarations est exact, mais nous nous efforçons d'améliorer la façon dont nous définissons et signalons les propriétaires."
-        ]
+        ],
+        "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
-    "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>",
     "contactEmail": "mplandlordcheck [ at ] protonmail [ dot ] com",
     "all": "Toutes",
     "party": "Parti",

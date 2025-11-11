@@ -8,14 +8,16 @@
         "notices": [
             "New Parliament is now available, but only Mark Carney has filed an ethics disclosure so far.",
             "Previous disclosures for current members are still available."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "ab": {
         "title": "Is My MLA a Landlord?",
         "dataSource": {
             "href": "https://www.ethicscommissioner.ab.ca/disclosure/mla-public-disclosure/",
             "label": "Office of the Ethics Commissioner"
-        }
+        },
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "bc": {
         "title": "Is My MLA a Landlord?",
@@ -26,7 +28,8 @@
         "notices": [
             "Unlike other jurisdictions, for BC we currently only flag landlords who directly collect rental income, not those who own multiple properties.",
             "We are working on an update to better distinguish between these cases for all jurisdictions."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "sk": {
         "title": "Is My MLA a Landlord?",
@@ -37,7 +40,8 @@
         "notices": [
             "In a setback for accessibility and transparency, Saskatchewan published their latest ethics disclosures in a non-machine-readable format.",
             "We have hand transcribed them for your consumption."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "on": {
         "title": "Is My MPP a Landlord?",
@@ -46,21 +50,28 @@
             "label": "Office of the Integrity Commissioner"
         },
         "notices": [
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "qc": {
         "title": "Is My MNA a Landlord?",
         "dataSource": {
             "href": "https://www.ced-qc.ca/fr/registres-publics/sommaires-des-declarations-des-interets-personnels/22-membres-du-conseil-executif-et-deputes",
             "label": "Sommaires des déclarations des intérêts personnels"
-        }
+        },
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "nl": {
         "title": "Is My MHA a Landlord?",
+        "dataSource": {
+            "href": "https://theindependent.ca/news/only-province-in-the-dark-inside-n-l-s-broken-ethics-system/",
+            "label": "The Independent"
+        },
         "notices": [
-            "All data is sourced from the work of Isaac Peltz, and contains a limited data set of what MHA's voluntarily disclosed to us.",
-            "Newfoundland & Labrador do not otherwise release any public ethics disclosure data."
-        ]
+            "Newfoundland recently had an election, this data reflects the previous administration.",
+            "All data is sourced from the work of Isaac Peltz, and contains a limited data set of what MHA's voluntarily disclosed to us."
+        ],
+        "allDataSourcedFrom": "Read more about Newfoundland's lack of transparency from <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "mb": {
         "title": "Is My MLA a Landlord?",
@@ -68,7 +79,8 @@
             "href": "https://ethicsmanitoba.ca/PublicDisclosure/SearchMember",
             "label": "Office of the Ethics Commissioner"
         },
-        "notices": []
+        "notices": [],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "ns": {
         "title": "Is My MLA a Landlord?",
@@ -78,7 +90,8 @@
         },
         "notices": [
             "Nova Scotia disclosures are not as thorough as other jurisdictions. The contents of the disclosures are accurate, but we are working to improve how we define and flag landlords for this province."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "nb": {
         "title": "Is My MLA a Landlord?",
@@ -89,7 +102,8 @@
         "notices": [
             "New Brunswick has released most of their ethics disclosures - but they are difficult to process.",
             "We are working on it."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
     "pe": {
         "title": "Is My MLA a Landlord?",
@@ -99,9 +113,9 @@
         },
         "notices": [
             "PEI disclosures are not as thorough as other jurisdictions. The contents of the disclosures are accurate, but we are working to improve how we define and flag landlords for this province."
-        ]
+        ],
+        "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
-    "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>",
     "contactEmail": "mplandlordcheck [ at ] protonmail [ dot ] com",
     "all": "All",
     "party": "Party",
