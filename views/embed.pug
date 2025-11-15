@@ -1,0 +1,41 @@
+doctype html
+html(lang=lang)
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title=t("landlordsByParty")
+    style.
+      body {
+        max-width: 600px;
+        font-family: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+        --font-mono: "Atkinson Hyperlegible Mono", "Courier New", monospace;
+      }
+      #table-details-label {
+        font-weight: bold;
+      }
+    style: include member-list.css
+  body
+    summary#table-details-label=t("landlordsByParty")
+    .totals-table-wrapper
+      table.totals-table(aria-labelledby="table-details-label")
+        thead
+          th=t("party")
+          th=t("members")
+          th=t("landlords")
+          th=t("percentage")
+        tbody
+          each party in parties.sort((a, b) => members.filter(member => member.party === b).length - members.filter(member => member.party === a).length)
+            - const memberCount = members.filter(member => party === "Indépendant" ? member.party.startsWith("Indépendant") : member.party === party).length
+            - const landlordCount = members.filter(member => (party === "Indépendant" ? member.party.startsWith("Indépendant") : member.party === party) && member.landlord).length
+            tr(data-party=party)
+              th(scope="row")=party
+              td=memberCount
+              td=landlordCount
+              td=formatPercentage(landlordCount / memberCount)
+        tfoot
+          - const memberCount = members.length
+          - const landlordCount = members.filter(member => member.landlord).length
+          th(scope="row")=t("allParties")
+          td=memberCount
+          td=landlordCount
+          td=formatPercentage(landlordCount / memberCount)

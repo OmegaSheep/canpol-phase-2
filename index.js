@@ -114,6 +114,57 @@ app.get(['/:lang/about', "/:lang/a-propos"], (req, res) => {
     res.render('about', { title: 'About Us' });
 });
 
+async function loadMembersForScope(_scope) {
+    // TODO - More than federal scope.
+    return MPS.aggregate([
+        {
+            $lookup: {
+                from: "mps_status",
+                localField: "name",
+                foreignField: "name",
+                as: "mps_status_matches"
+            },
+        },
+    ]).map(member => {
+        for (const match of member.mps_status_matches) {
+            if (match.landlord === "Y") member.landlord = true;
+            if (match.investor === "Y") member.investor = true;
+        }
+
+        return member;
+    }).sort({ name: 1 }).toArray();
+}
+
+/*
+<iframe 
+    src="ismympalandlord.ca/en/embed/federal/totals" 
+    width="100%" 
+    height="400" 
+    frameborder="0"
+    title="Landlords by Party Statistics">
+</iframe>
+*/
+app.get("/:lang/embed/:scope/totals", async(req, res) => {
+  const { lang, scope } = req.params;
+  
+  const validScopes = ["federal"];
+  if (!validScopes.includes(scope)) {
+    return res.status(404).send("Invalid jurisdictional scope. Only 'federal' is currently supported.");
+  }
+  
+  const members = await loadMembersForScope(scope);
+  const parties = [...new Set(members.map(m => 
+    m.party.startsWith("Indépendant") ? "Indépendant" : m.party
+  ))];
+  
+  // Render the embed template
+  res.render("embed", {
+    members,
+    parties,
+    scope,
+  });
+});
+
 /* FEDERAL */
 
 app.get('/:lang', async (req, res) => {
