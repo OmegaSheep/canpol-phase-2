@@ -13,7 +13,7 @@ This is the source for [ismympalandlord.ca](https://ismympalandlord.ca) inspired
 
 ### Why is the [thing] so [criticism]?
 
-This was put together in a hurry to quickly prototype and share something publicly. If something is bad, it's likely because it was done quickly. I encourage you to make it better.
+This was put together in a hurry to quickly prototype and share something publicly. If something is bad, it's likely because it was done quickly. We are working on it.
 
 ### How is this hosted?
 
