@@ -34,13 +34,13 @@
     }
 
     header {
-        text-align: center;
         margin-block-end: 3rem;
         margin-block-start: 1.5rem;
     }
 
     header nav {
-        display: inline-flex;
+        display: flex;
+        align-items: baseline;
         flex-wrap: wrap;
         column-gap: 1rem;
         row-gap: 0.5rem;
@@ -58,7 +58,7 @@
         inset-inline-start: 1rem;
     }
 
-    header nav a[aria-current="page"] {
+    a[aria-current="page"] {
         text-decoration: none;
     }
 
@@ -68,6 +68,135 @@
 }
 
 @layer components {
+    .site-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: Black;
+    }
+
+    @media screen and (min-width: 40rem) {
+        .site-title {
+            font-size: 1rem;
+        }
+    }
+
+    .language-switcher {
+        display: flex;
+        justify-content: center;
+        gap: 0.5em;
+    }
+
+    .language-switcher :any-link {
+        color: Black;
+        font-weight: 500;
+    }
+
+    nav-overlay:not(:defined) {
+        display: contents;
+
+    }
+    nav-overlay:not(:defined) :where([slot], .federal-mps) {
+        display: none;
+    }
+
+    nav-overlay:defined {
+        display: inline-block;
+    }
+
+    @media screen and (min-width: 40rem) {
+        nav-overlay:defined {
+            margin-inline-start: auto;
+        }
+    }
+
+    :root:has(nav-overlay:state(open)) {
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 200ms ease-in;
+    }
+
+    nav-overlay::part(overlay) {
+        transition:
+            opacity 300ms ease-in-out,
+            overlay 0s ease-in-out allow-discrete;
+    }
+
+    nav-overlay :any-link {
+        transition: opacity 200ms ease-in-out;
+        transition-delay: 300ms;
+        transition-delay: calc(100ms + 50ms * sibling-index());
+    }
+
+    nav-overlay::part(overlay):modal {
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        box-sizing: border-box;
+        display: grid;
+        align-content: safe center;
+        grid-gap: 8px;
+        padding: 36px;
+        inset: 0;
+        max-block-size: 100%;
+        max-inline-size: 100%;
+        block-size: 100%;
+        inline-size: 100%;
+        border: 0;
+    }
+
+    nav-overlay::part(button) {
+        font: inherit;
+        font-weight: 500;
+        background-color: Black;
+        color: White;
+        padding-block: 4px;
+        padding-inline: 8px;
+        border: 2px solid Black;
+        border-radius: 4px;
+        cursor: pointer;
+
+        transition-property: background-color, color;
+        transition-duration: 150ms;
+        transition-timing-function: ease-in-out;
+    }
+
+    nav-overlay::part(button):hover {
+        background-color: White;
+        color: Black;
+    }
+
+    nav-overlay::part(button):focus-visible {
+        outline: 2px solid RoyalBlue;
+        outline-offset: 2px;
+    }
+
+
+    nav-overlay::part(close-button) {
+        position: fixed;
+        inset-block-start: 48px;
+        inset-inline-end: 48px;
+
+        transition:
+            background-color 150ms,
+            color 150ms,
+            opacity 200ms 300ms;
+        transition-timing-function: ease-in-out;
+    }
+
+    nav-overlay:defined :any-link {
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: Black;
+    }
+
+    @starting-style {
+        nav-overlay::part(close-button),
+        nav-overlay::part(overlay):modal,
+        nav-overlay :any-link {
+            opacity: 0;
+        }
+    }
+
     .member-cards-grid {
         display: grid;
         list-style: none;
