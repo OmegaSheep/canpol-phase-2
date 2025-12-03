@@ -6,8 +6,7 @@
             "label": "le Commissariat aux conflits d'intérêts et à l'éthique"
         },
         "notices": [
-            "Le nouveau Parlement est désormais disponible, mais seul Mark Carney a déposé une déclaration éthique à ce jour.",
-            "Les déclarations précédentes des membres actuels sont toujours disponibles."
+            "De nombreuses nouvelles déclarations sont désormais disponibles pour le nouveau Parlement, mais il nous manque encore environ les deux tiers des déclarations des nouveaux députés."
         ],
         "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
@@ -131,6 +130,10 @@
     "isALandlord": "{{name}} reçoit un revenu de location",
     "isNotKnownToBeALandlord": "{{name}} ne reçoit pas de revenu de location",
     "hasInvestments": "{{name}} détient des investissements importants",
+    "hasMultipleProperties": "✅ {{name}} possède plusieurs propriétés.",
+    "collectsRentalIncome": "✅ {{name}} perçoit des revenus locatifs.",
+    "isNotKnownToHaveMultipleProperties": "❌ {{name}} n'est pas connu(e) pour avoir plusieurs propriétés.",
+    "isNotKnownToCollectRentalIncome": "❌ {{name}} n'est pas connu(e) pour percevoir des revenus locatifs.",
     "isNotKnownToHaveInvestments": "{{name}} n'est pas connu pour avoir des investissements importants",
     "unsubmittedDisclosureProperty": "{{name}} n'a pas encore soumis sa déclaration d'éthique concernant la propriété.",
     "unsubmittedDisclosureInvestments": "{{name}} n'a pas encore soumis sa déclaration d'éthique concernant les investissements.",

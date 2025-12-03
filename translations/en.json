@@ -6,8 +6,7 @@
             "label": "Office of Conflict of Interest and Ethics Commissioner"
         },
         "notices": [
-            "New Parliament is now available, but only Mark Carney has filed an ethics disclosure so far.",
-            "Previous disclosures for current members are still available."
+            "Many new disclosures are now available for the new Parliament, but we are still missing roughly 2/3 of the new MP's disclosures."
         ],
         "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
@@ -130,6 +129,10 @@
     "isALandlord": "{{name}} is a landlord",
     "isNotKnownToBeALandlord": "{{name}} is not known to be a landlord",
     "hasInvestments": "{{name}} holds significant investments",
+    "hasMultipleProperties": "✅ {{name}} has multiple properties.",
+    "collectsRentalIncome": "✅ {{name}} collects rental income.",
+    "isNotKnownToHaveMultipleProperties": "❌ {{name}} is not known to have multiple properties.",
+    "isNotKnownToCollectRentalIncome": "❌ {{name}} is not known to collect rental income.",
     "isNotKnownToHaveInvestments": "{{name}} is not known to have significant investments",
     "unsubmittedDisclosureProperty": "{{name}} has not yet submitted their ethics disclosure regarding property ownership.",
     "unsubmittedDisclosureInvestments": "{{name}} has not yet submitted their ethics disclosure regarding investments.",

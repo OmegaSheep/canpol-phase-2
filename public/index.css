@@ -217,6 +217,10 @@ body {
     font-size: x-large;
     font-weight: bold;
 }
+.landlord-subtext {
+    font-size: medium;
+    font-weight: normal;
+}
 .investor {
     font-size: x-large;
     font-weight: bold;
