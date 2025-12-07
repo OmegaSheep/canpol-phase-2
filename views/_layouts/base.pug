@@ -11,28 +11,43 @@ html.no-js(lang=`${lang}-ca`)
       link(rel="stylesheet" href="/main.css")
       link(rel="stylesheet" href="/index.css")
       link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap")
+      script(src="/nav-overlay-element.js")
   body
+    mixin nav-link
+      a(aria-current=attributes.href === currentPath && "page")&attributes(attributes)
+        block
+
     a(href="#content").visually-hidden.skip-to-content=t("skipToContent")
-    case lang
-      when "en": a.switch-language(href=currentPath.startsWith("/en/about") ? "/fr/a-propos" : currentPath.replace("en", "fr")) Français
-      when "fr": a.switch-language(href=currentPath.startsWith("/fr/a-propos") ? "/en/about" : currentPath.replace("fr", "en")) English
+    .language-switcher
+      +nav-link(href=currentPath.startsWith("/fr/a-propos") ? "/en/about" : currentPath.replace("fr", "en"))
+        span(aria-hidden="true") EN
+        .visually-hidden English
+      +nav-link(href=currentPath.startsWith("/en/about") ? "/fr/a-propos" : currentPath.replace("en", "fr"))
+        span(aria-hidden="true") FR
+        .visually-hidden Français
     header
       nav
-        mixin nav-link
-          a(aria-current=attributes.href === currentPath && "page")&attributes(attributes)
-            block
-        +nav-link(href=`/${lang}`)=t("home")
+        +nav-link(href=`/${lang}`).site-title=t("siteTitle")
         +nav-link(href=`/${lang}/${lang === "en" ? "about" : "a-propos"}`)=t("about")
-        +nav-link(href=`/${lang}/bc`) BC MLAs
-        +nav-link(href=`/${lang}/ab`) Alberta MLAs
-        +nav-link(href=`/${lang}/sk`) Saskatchewan MLAs
-        +nav-link(href=`/${lang}/mb`) Manitoba MLAs
-        +nav-link(href=`/${lang}/on`) Ontario MPPs
-        +nav-link(href=`/${lang}/qc`) Quebec MNAs
-        +nav-link(href=`/${lang}/ns`) Nova Scotia MLAs
-        +nav-link(href=`/${lang}/nb`) New Brunswick MLAs
-        +nav-link(href=`/${lang}/pe`) PEI MLAs
-        +nav-link(href=`/${lang}/nl`) Newfoundland & Labrador MHAs
+        nav-overlay
+          span(slot="open-button-label")=t("whoElse")
+          span(slot="close-button-label")=t("close")
+          // Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.
+          svg(slot="open-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true" focusable="false")
+            path(fill=currentColor d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z")
+          svg(slot="close-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true" focusable="false")
+            path(fill=currentColor d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z")
+          +nav-link(href=`/${lang}`).federal-mps Federal MPs
+          +nav-link(href=`/${lang}/bc`) BC MLAs
+          +nav-link(href=`/${lang}/ab`) Alberta MLAs
+          +nav-link(href=`/${lang}/sk`) Saskatchewan MLAs
+          +nav-link(href=`/${lang}/mb`) Manitoba MLAs
+          +nav-link(href=`/${lang}/on`) Ontario MPPs
+          +nav-link(href=`/${lang}/qc`) Quebec MNAs
+          +nav-link(href=`/${lang}/ns`) Nova Scotia MLAs
+          +nav-link(href=`/${lang}/nb`) New Brunswick MLAs
+          +nav-link(href=`/${lang}/pe`) PEI MLAs
+          +nav-link(href=`/${lang}/nl`) Newfoundland & Labrador MHAs
     main#content
       block main
     footer.contact
