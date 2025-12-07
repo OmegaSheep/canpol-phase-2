@@ -30,6 +30,23 @@ block main
               = t("unsubmittedDisclosureProperty", { name: name })
             default
               | It is not presently known if #{name} is a Landlord.
+        ul
+          li.landlord-subtext
+            case multipleProperties
+              when true
+                = t("hasMultipleProperties", { name: name })
+              when false
+                = t("isNotKnownToHaveMultipleProperties", { name: name })
+              default 
+                = t("isNotKnownToHaveMultipleProperties", { name: name })
+          li.landlord-subtext
+            case collectRentalIncome
+              when true
+                = t("collectsRentalIncome", { name: name })
+              when false
+                = t("isNotKnownToCollectRentalIncome", { name: name })
+              default 
+                = t("isNotKnownToCollectRentalIncome", { name: name })
         li.investor
           case investor
             when "Y"

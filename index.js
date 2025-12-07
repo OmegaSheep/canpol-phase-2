@@ -129,6 +129,8 @@ async function loadMembersForScope(_scope) {
         for (const match of member.mps_status_matches) {
             if (match.landlord === "Y") member.landlord = true;
             if (match.investor === "Y") member.investor = true;
+            if (match?.multipleProperties) member.multipleProperties = true;
+            if (match?.collectRentalIncome) member.collectRentalIncome = true;
         }
 
         return member;
@@ -187,6 +189,8 @@ app.get('/:lang', async (req, res) => {
         for (const match of member.mps_status_matches) {
             if (match.landlord === "Y") member.landlord = true;
             if (match.investor === "Y") member.investor = true;
+            if (match?.multipleProperties) member.multipleProperties = true;
+            if (match?.collectRentalIncome) member.collectRentalIncome = true;
         }
         member.province = getProvinceKey(member.province);
 
@@ -228,7 +232,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
     // if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
 
     let mp = await MPS.findOne({ constituency_slug: constituency }, COLLATION);
-    let { home_owner, landlord, investor } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
+    let { home_owner, landlord, investor, multipleProperties, collectRentalIncome } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
     let disclosures = [];
     if (lang === "fr") {
         disclosures = await DISCLOSURES_FR.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
@@ -301,6 +305,8 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         home_owner,
         landlord,
         investor,
+        multipleProperties,
+        collectRentalIncome,
         groupedDisclosures: groupDisclosures(disclosures),
         expenseTypes,
         expenseSuppliers,
