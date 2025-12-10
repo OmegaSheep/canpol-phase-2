@@ -235,9 +235,9 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
     let { home_owner, landlord, investor, multipleProperties, collectRentalIncome } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
     let disclosures = [];
     if (lang === "fr") {
-        disclosures = await DISCLOSURES_FR.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+        disclosures = await DISCLOSURES_FR.find({ name: mp.name, isLatest: true }, COLLATION).sort({ category: 1 }).toArray();
     } else {
-        disclosures = await DISCLOSURES.find({ name: mp.name }, COLLATION).sort({ category: 1 }).toArray();
+        disclosures = await DISCLOSURES.find({ name: mp.name, isLatest: true }, COLLATION).sort({ category: 1 }).toArray();
     }
 
     // Top 5 categories of expense spends for this MP
