@@ -2,9 +2,8 @@
 
 New Brunswick has somewhat consistent ethics disclosures.
 
-They are released in PDF form.
+They are released in PDF form, often very late.
 
-We have not tried to process them yet as the data for the latest NB parliament is not available yet.
+They need to be processed by hand as the PDFs are not machine readable. . .
 
-Given the data quality we have seen throughout the maritimes it is likely the quality will not be exceptional.
-
+Quality is not especially great, many blanks / inconsistencies.
