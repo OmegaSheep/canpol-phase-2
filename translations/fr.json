@@ -6,7 +6,8 @@
             "label": "le Commissariat aux conflits d'intérêts et à l'éthique"
         },
         "notices": [
-            "De nombreuses nouvelles déclarations sont désormais disponibles pour le nouveau Parlement, mais il nous manque encore environ les deux tiers des déclarations des nouveaux députés."
+            "De nombreuses nouvelles déclarations sont désormais disponibles pour le nouveau Parlement, mais il nous manque encore environ les deux tiers des déclarations des nouveaux députés.",
+            "Le contenu de la divulgation est exact et à jour, mais les indicateurs sont mis à jour en attendant de nouvelles informations."
         ],
         "allDataSourcedFrom": "Toutes les données proviennent de <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
@@ -131,6 +132,7 @@
     "isNotKnownToBeALandlord": "{{name}} ne reçoit pas de revenu de location",
     "hasInvestments": "{{name}} détient des investissements importants",
     "hasMultipleProperties": "✅ {{name}} possède plusieurs propriétés.",
+    "hasMultiplePropertiesSpouseOnly": "⚠️ {{name}} possède plusieurs propriétés via son conjoint.",
     "collectsRentalIncome": "✅ {{name}} perçoit des revenus locatifs.",
     "isNotKnownToHaveMultipleProperties": "❌ {{name}} n'est pas connu(e) pour avoir plusieurs propriétés.",
     "isNotKnownToCollectRentalIncome": "❌ {{name}} n'est pas connu(e) pour percevoir des revenus locatifs.",

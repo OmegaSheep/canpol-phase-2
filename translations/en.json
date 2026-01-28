@@ -6,7 +6,8 @@
             "label": "Office of Conflict of Interest and Ethics Commissioner"
         },
         "notices": [
-            "Many new disclosures are now available for the new Parliament, but we are still missing roughly 2/3 of the new MP's disclosures."
+            "Many new disclosures are now available for the new Parliament, but we are still missing roughly 2/3 of the new MP's disclosures.",
+            "The disclosure content is accurate and up-to-date, but updating the flagging is ongoing as we await more data."
         ],
         "allDataSourcedFrom": "All data sourced from the <a href=\"{{sourceLink}}\">{{sourceLabel}}</a>"
     },
@@ -130,6 +131,7 @@
     "isNotKnownToBeALandlord": "{{name}} is not known to be a landlord",
     "hasInvestments": "{{name}} holds significant investments",
     "hasMultipleProperties": "✅ {{name}} has multiple properties.",
+    "hasMultiplePropertiesSpouseOnly": "⚠️ {{name}} has multiple properties via their spouse.",
     "collectsRentalIncome": "✅ {{name}} collects rental income.",
     "isNotKnownToHaveMultipleProperties": "❌ {{name}} is not known to have multiple properties.",
     "isNotKnownToCollectRentalIncome": "❌ {{name}} is not known to collect rental income.",

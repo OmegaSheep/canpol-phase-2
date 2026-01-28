@@ -131,6 +131,7 @@ async function loadMembersForScope(_scope) {
             if (match.investor === "Y") member.investor = true;
             if (match?.multipleProperties) member.multipleProperties = true;
             if (match?.collectRentalIncome) member.collectRentalIncome = true;
+            if (match?.spouseOnly) member.spouseOnly = true;
         }
 
         return member;
@@ -191,6 +192,7 @@ app.get('/:lang', async (req, res) => {
             if (match.investor === "Y") member.investor = true;
             if (match?.multipleProperties) member.multipleProperties = true;
             if (match?.collectRentalIncome) member.collectRentalIncome = true;
+            if (match?.spouseOnly) member.spouseOnly = true;
         }
         member.province = getProvinceKey(member.province);
 
@@ -232,7 +234,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
     // if (lang === "fr") return res.redirect(307, `/en/federal/${constituency}`)
 
     let mp = await MPS.findOne({ constituency_slug: constituency }, COLLATION);
-    let { home_owner, landlord, investor, multipleProperties, collectRentalIncome } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
+    let { home_owner, landlord, investor, multipleProperties, collectRentalIncome, spouseOnly } = await MPS_STATUS.findOne({ name: mp.name }, COLLATION);
     let disclosures = [];
     if (lang === "fr") {
         disclosures = await DISCLOSURES_FR.find({ name: mp.name, isLatest: true }, COLLATION).sort({ category: 1 }).toArray();
@@ -307,6 +309,7 @@ app.get('/:lang/federal/:constituency', async (req, res) => {
         investor,
         multipleProperties,
         collectRentalIncome,
+        spouseOnly,
         groupedDisclosures: groupDisclosures(disclosures),
         expenseTypes,
         expenseSuppliers,
@@ -343,7 +346,8 @@ const PROVINCES = {
         mapDisclosures: member => {
             for (const disclosure of member.disclosures) {
                 // TODO: use a regex
-                if (disclosure.content.includes("Rental Property") || disclosure.content.includes("Rental Income")) member.landlord = true;
+                if (disclosure.content.includes("Rental Property") || disclosure.content.includes("Rental Income") || 
+            disclosure.content.includes("Properties (4)")) member.landlord = true;
                 if (
                     disclosure.category.includes("Securities")
                     || disclosure.category.includes("Bonds & Certificates")
