@@ -34,7 +34,11 @@ block main
           li.landlord-subtext
             case multipleProperties
               when true
-                = t("hasMultipleProperties", { name: name })
+                case spouseOnly
+                  when true
+                    = t("hasMultiplePropertiesSpouseOnly", { name: name })
+                  when false
+                    = t("hasMultipleProperties", { name: name })
               when false
                 = t("isNotKnownToHaveMultipleProperties", { name: name })
               default 
